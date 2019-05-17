@@ -3,6 +3,7 @@
 import cv2 as cv
 import numpy as np
 import argparse
+import matplotlib.pyplot as plt
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--input', help='Path to image or video. Skip to capture frames from camera')
@@ -77,10 +78,25 @@ while cv.waitKey(1) < 0:
     
             cv.putText(frame, str(partTo), points[idTo], font, 0.5, fontColor, 1, cv.LINE_AA)
             cv.putText(frame, str(partFrom), points[idFrom], font, 0.5, fontColor, 1, cv.LINE_AA)
-            
 
     t, _ = net.getPerfProfile()
     freq = cv.getTickFrequency() / 1000
     cv.putText(frame, '%.2fms' % (t / freq), (10, 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0))
 
     cv.imshow('OpenPose using OpenCV', frame)
+    
+    # Removing NoneTypes
+    
+    res = []
+    for coords in points:
+        if coords != None:
+            res.append(coords)
+
+    # Seperating xsand ys from points
+
+    xs = []
+    ys = []
+
+    for coords in res:
+        xs.append(coords[0])
+        ys.append(coords[1])
