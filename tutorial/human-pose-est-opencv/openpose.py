@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import poses
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--input', help='Path to image or video. Skip to capture frames from camera', default="tpose.jpg")
+parser.add_argument('--input', help='Path to image or video. Skip to capture frames from camera')
 parser.add_argument('--thr', default=0.2, type=float, help='Threshold value for pose parts heat map')
 parser.add_argument('--width', default=368, type=int, help='Resize input to specific width.')
 parser.add_argument('--height', default=368, type=int, help='Resize input to specific height.')
@@ -102,7 +102,8 @@ while cv.waitKey(1) < 0:
     freq = cv.getTickFrequency() / 1000
 
     xs, ys = coords_handler(points)
-    res = poses.tpose(ys)
-    cv.putText(frame, str(res), (20,20), font, 0.5, fontColor, 1, cv.LINE_AA)
+    print(ys)
+    res = poses.ypose(ys)
+    cv.putText(frame, res, (20,20), font, 0.5, fontColor, 1, cv.LINE_AA)
 
     cv.imshow('OpenPose using OpenCV', frame)
