@@ -103,7 +103,7 @@ while cv.waitKey(1) < 0:
 
     xs, ys = coords_handler(points)
     print(ys)
-    res = poses.ypose(ys)
+    res = poses.tpose(ys)
     cv.putText(frame, res, (20,20), font, 0.5, fontColor, 1, cv.LINE_AA)
 
     cv.imshow('OpenPose using OpenCV', frame)

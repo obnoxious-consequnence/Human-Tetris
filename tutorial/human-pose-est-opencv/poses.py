@@ -1,15 +1,16 @@
-import cv2 as cv
 def tpose(y):
     if len(y) <= 5:
         res = 'To Few Points Detectet'
-    if y[2] and y[4] == y[0] or y[2] and y[4] > y[0]*1.1:
+    elif y[2] and y[4] == y[0] or y[2] and y[4] > y[0]*1.1:
         res = 'This is a perfect t-pose!'
     else:
         res ="Try again sonnyboy"
     return res
 
 def ypose(y):
-    if y[2] and y[4] > y[0]*1.3:
+    if len(y) <= 5:
+        res = 'To Few Points Detectet'
+    elif y[2] and y[4] > y[0]*1.3:
           res ="This is a perfect y-pose!"
     else:
         res ="Try again sonnyboy"
