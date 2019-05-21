@@ -98,12 +98,9 @@ while cv.waitKey(1) < 0:
             cv.putText(frame, str(partTo), points[idTo], font, 0.5, fontColor, 1, cv.LINE_AA)
             cv.putText(frame, str(partFrom), points[idFrom], font, 0.5, fontColor, 1, cv.LINE_AA)
 
-    t, _ = net.getPerfProfile()
-    freq = cv.getTickFrequency() / 1000
-
     xs, ys = coords_handler(points)
-    print(ys)
     res = poses.tpose(ys)
+
     cv.putText(frame, res, (20,20), font, 0.5, fontColor, 1, cv.LINE_AA)
 
     cv.imshow('OpenPose using OpenCV', frame)

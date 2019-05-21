@@ -16,6 +16,6 @@ while (millis > 0):
         break
 
  #once the while loop breaks, write img
-img_name = "example.png"
+img_name = "example.jpg"
 cv2.imwrite(img_name, frame)
 print("{} written!".format(img_name))
