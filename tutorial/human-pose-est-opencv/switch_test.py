@@ -1,16 +1,17 @@
 import random
+import test
 
 def t_pose():
-    return 'Do a T-Pose'
+    return 'T-Pose'
 
 def y_pose():
-    return 'Do a Y-Pose'
+    return 'Y-Pose'
 
 def i_pose():
-    return 'Do a I-Pose'
+    return 'I-Pose'
 
 def x_pose():
-    return 'Do a X-Pose'
+    return 'X-Pose'
 
 def get_pose(pose):
     switcher = {
@@ -19,11 +20,14 @@ def get_pose(pose):
         2: i_pose(),
         3: x_pose(),
     }
-    return switcher.get(pose, "nothing") 
+    return switcher.get(pose, "Nothing") 
 
 poses = [0, 1, 2, 3]
 for x in range(0, len(poses)):
-    # pose = random.choice(poses)
     pose = random.choice(poses)
     poses.remove(pose)
-    print(get_pose(pose))
+
+    req_pose = get_pose(pose)
+    pose_img = test.cam_picture(x, req_pose)
+    test.openpose(pose_img, req_pose)
+

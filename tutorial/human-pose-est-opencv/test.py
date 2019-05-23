@@ -21,7 +21,10 @@ POSE_PAIRS = [ ["Neck", "RShoulder"], ["Neck", "LShoulder"], ["RShoulder", "RElb
                ["Neck", "RHip"], ["RHip", "RKnee"], ["RKnee", "RAnkle"], ["Neck", "LHip"],
                ["LHip", "LKnee"], ["LKnee", "LAnkle"], ["Neck", "Head"] ]
 
-def cam_picture():
+font = cv.FONT_HERSHEY_SIMPLEX
+fontColor = (0, 0, 255)
+
+def cam_picture(pose_nr, req_pose):
     cap = cv.VideoCapture(0)
     seconds = 3
 
@@ -31,14 +34,19 @@ def cam_picture():
         ret, frame = cap.read()
         millis = millis - 10
     # Display the resulting frame
+        frameWidth = frame.shape[1]
+        frameHeight = frame.shape[0]
+
+        cv.putText(frame, str(req_pose), (int(frameWidth / 2), 20), font, 0.8, fontColor, 1, cv.LINE_AA)
         cv.imshow('video recording', frame)
+
         if cv.waitKey(10) & 0xFF == ord('q'):
-        #this method holds execution for 10 milliseconds, which is why we 
-        #reduce millis by 10
+        # #this method holds execution for 10 milliseconds, which is why we 
+        # #reduce millis by 10
             break
 
     #once the while loop breaks, write img
-    img_name = "example.jpg"
+    img_name = "imgs/0{}_{}.jpg".format(pose_nr + 1, req_pose)
     cv.imwrite(img_name, frame)
     print("{} written!".format(img_name))
     return img_name
@@ -60,16 +68,15 @@ def coords_handler(points):
 
     return xs, ys
 
-def openpose():
+def openpose(image, req_pose):
     inWidth = 368
     inHeight = 368
     thr = 0.2
 
     net = cv.dnn.readNetFromTensorflow("graph_opt.pb")
-    image = cam_picture()
     cap = cv.VideoCapture(image)
 
-    while cv.waitKey(1) < 0:
+    while True:
         hasFrame, frame = cap.read()
         if not hasFrame:
             cv.waitKey()
@@ -107,8 +114,8 @@ def openpose():
             idFrom = BODY_PARTS[partFrom]
             idTo = BODY_PARTS[partTo]
 
-            font = cv.FONT_HERSHEY_SIMPLEX
-            fontColor = (0, 0, 255)
+            # font = cv.FONT_HERSHEY_SIMPLEX
+            # fontColor = (0, 0, 255)
 
             if points[idFrom] and points[idTo]:
                 cv.line(frame, points[idFrom], points[idTo], (0, 255, 0), 3)
@@ -124,6 +131,8 @@ def openpose():
 
         cv.putText(frame, res, (20,20), font, 0.5, fontColor, 1, cv.LINE_AA)
 
-        cv.imshow('OpenPose using OpenCV', frame)
+        img_name = '{}_score.jpg'.format(req_pose)
+        cv.imwrite('imgs/'+img_name, frame)
 
-openpose()
+        break
+# openpose()
