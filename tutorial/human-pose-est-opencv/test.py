@@ -36,7 +36,7 @@ def cam_picture(pose_nr, req_pose):
     # Display the resulting frame
         frameWidth = frame.shape[1]
         frameHeight = frame.shape[0]
-
+        
         cv.putText(frame, str(req_pose), (int(frameWidth / 2), 20), font, 0.8, fontColor, 1, cv.LINE_AA)
         cv.imshow('video recording', frame)
 
