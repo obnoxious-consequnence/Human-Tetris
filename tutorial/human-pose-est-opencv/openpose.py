@@ -14,7 +14,7 @@ parser.add_argument('--height', default=368, type=int, help='Resize input to spe
 
 args = parser.parse_args()
 
-BODY_PARTS = { "Head": 0, "Neck": 1, "RShoulder": 2, "RElbow": 3, "RWrist": 4,
+BODY_PARTS = { "Head": 0, z"Neck": 1, "RShoulder": 2, "RElbow": 3, "RWrist": 4,
                "LShoulder": 5, "LElbow": 6, "LWrist": 7, "RHip": 8, "RKnee": 9,
                "RAnkle": 10, "LHip": 11, "LKnee": 12, "LAnkle": 13 }
 

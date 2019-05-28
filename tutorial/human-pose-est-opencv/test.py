@@ -26,10 +26,10 @@ fontColor = (0, 0, 255)
 
 def cam_picture(pose_nr, req_pose):
     cap = cv.VideoCapture(0)
-    seconds = 3
+    seconds = 4
 
     millis = seconds * 1000
-    while (millis > 0):
+    while (millis > 1000):
     # Capture frame-by-frame
         ret, frame = cap.read()
         millis = millis - 10
@@ -37,7 +37,8 @@ def cam_picture(pose_nr, req_pose):
         frameWidth = frame.shape[1]
         frameHeight = frame.shape[0]
         
-        cv.putText(frame, str(req_pose), (int(frameWidth / 2), 20), font, 0.8, fontColor, 1, cv.LINE_AA)
+        cv.putText(frame, str(int(millis / 1000)), (int(frameWidth / 2), 20), font, 0.6, fontColor, 1, cv.LINE_AA)
+        cv.putText(frame, str(req_pose), (20, 20), font, 0.6, fontColor, 1, cv.LINE_AA)
         cv.imshow('video recording', frame)
 
         if cv.waitKey(10) & 0xFF == ord('q'):
@@ -135,4 +136,3 @@ def openpose(image, req_pose):
         cv.imwrite('imgs/'+img_name, frame)
 
         break
-# openpose()
