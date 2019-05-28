@@ -3,6 +3,8 @@ import numpy as np
 import argparse
 import matplotlib.pyplot as plt
 import poses
+import os
+import time
 
 # parser = argparse.ArgumentParser()
 # parser.add_argument('--input', help='Path to image or video. Skip to capture frames from camera')
@@ -24,31 +26,43 @@ POSE_PAIRS = [ ["Neck", "RShoulder"], ["Neck", "LShoulder"], ["RShoulder", "RElb
 font = cv.FONT_HERSHEY_SIMPLEX
 fontColor = (0, 0, 255)
 
-def cam_picture(pose_nr, req_pose):
+def cam_picture(pose_nr, req_pose, len_poses):
     cap = cv.VideoCapture(0)
-    seconds = 3
+    t_start = time.time()
+    t_end = t_start + 5
 
-    millis = seconds * 1000
-    while (millis > 0):
-    # Capture frame-by-frame
+    while time.time() < t_end:
+        # Capture frame-by-frame
         ret, frame = cap.read()
-        millis = millis - 10
-    # Display the resulting frame
-        frameWidth = frame.shape[1]
-        frameHeight = frame.shape[0]
 
-        cv.putText(frame, str(req_pose), (int(frameWidth / 2), 20), font, 0.8, fontColor, 1, cv.LINE_AA)
+        # Display the resulting frame
+        font = cv.FONT_HERSHEY_SIMPLEX
+        fontColor = (0, 0, 255)
+
+        frame_width = frame.shape[1]
+        frame_height = frame.shape[0]
+        
+        # Displays the time remaing, before picture is taken, and evaluaed
+        t_now = time.time()
+        cv.putText(frame, str(int((t_end + 1) - t_now)), (int(frame_width / 2), 20), font, 0.6, fontColor, 1, cv.LINE_AA)
+
+        # Displays the req. pose and total score
+        cv.putText(frame, req_pose, (20, 20), font, 0.6, fontColor, 1, cv.LINE_AA)
+        cv.putText(frame, str(pose_nr + 1) + '/' + str(len_poses), (20, 50), font, 0.6, fontColor, 1, cv.LINE_AA)
+        
         cv.imshow('video recording', frame)
-
         if cv.waitKey(10) & 0xFF == ord('q'):
-        # #this method holds execution for 10 milliseconds, which is why we 
-        # #reduce millis by 10
+            # This method holds execution for 10 milliseconds, which is why we 
+            # Reduce millis by 10
             break
 
-    #once the while loop breaks, write img
+    # Once the while loop breaks, write img
+    if not os.path.exists('imgs'):
+        os.makedirs('imgs')
+
     img_name = "imgs/0{}_{}.jpg".format(pose_nr + 1, req_pose)
     cv.imwrite(img_name, frame)
-    print("{} written!".format(img_name))
+
     return img_name
 
 def coords_handler(points):
@@ -135,4 +149,3 @@ def openpose(image, req_pose):
         cv.imwrite('imgs/'+img_name, frame)
 
         break
-# openpose()
