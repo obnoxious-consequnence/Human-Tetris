@@ -3,6 +3,7 @@ import numpy as np
 import argparse
 import matplotlib.pyplot as plt
 import poses
+import os
 
 # parser = argparse.ArgumentParser()
 # parser.add_argument('--input', help='Path to image or video. Skip to capture frames from camera')
@@ -30,10 +31,10 @@ def cam_picture(pose_nr, req_pose):
 
     millis = seconds * 1000
     while (millis > 1000):
-    # Capture frame-by-frame
+        # Capture frame-by-frame
         ret, frame = cap.read()
         millis = millis - 10
-    # Display the resulting frame
+        # Display the resulting frame
         frameWidth = frame.shape[1]
         frameHeight = frame.shape[0]
         
@@ -42,14 +43,17 @@ def cam_picture(pose_nr, req_pose):
         cv.imshow('video recording', frame)
 
         if cv.waitKey(10) & 0xFF == ord('q'):
-        # #this method holds execution for 10 milliseconds, which is why we 
-        # #reduce millis by 10
+        # This method holds execution for 10 milliseconds, which is why we 
+        # reduce millis by 10
             break
 
-    #once the while loop breaks, write img
+    # Once the while loop breaks, write img
+    if not os.path.exists('imgs'):
+        os.makedirs('imgs')
+
     img_name = "imgs/0{}_{}.jpg".format(pose_nr + 1, req_pose)
     cv.imwrite(img_name, frame)
-    print("{} written!".format(img_name))
+
     return img_name
 
 def coords_handler(points):
