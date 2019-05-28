@@ -1,5 +1,6 @@
 import random
 import test
+import time
 
 def t_pose():
     return 'T-Pose'
@@ -23,11 +24,11 @@ def get_pose(pose):
     return switcher.get(pose, "Nothing") 
 
 poses = [0, 1, 2, 3]
+len_poses = len(poses)
 for x in range(0, len(poses)):
     pose = random.choice(poses)
     poses.remove(pose)
 
     req_pose = get_pose(pose)
-    pose_img = test.cam_picture(x, req_pose)
-    test.openpose(pose_img, req_pose)
-
+    pose_img = test.cam_picture(x, req_pose, len_poses)
+    test.openpose(pose_img, req_pose)¨
