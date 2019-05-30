@@ -24,6 +24,8 @@ clock = pygame.time.Clock()
 
 stickfigImg = pygame.image.load('backgroundmain.png')
 posesImg = pygame.image.load('poses.png')
+camera = cv2.VideoCapture(0)
+recording = False
 
 def stickFig(x,y):
     gameDisplay.blit(stickfigImg, (x,y))
@@ -47,14 +49,13 @@ def button(msg,x,y,w,h,ic,ac,action=None):
         if click[0] == 1 and action != None:
             if action == "play":
                 start_game()
-                
             elif action == "score":
                 print("Scoreboard clicked!")
             elif action == "quit":
                 pygame.quit()
                 quit()
             elif action == "go":
-                launch_game()
+                cap_screen()
     else:
         pygame.draw.rect(gameDisplay, ic, (x, y, w, h))
 
@@ -63,27 +64,23 @@ def button(msg,x,y,w,h,ic,ac,action=None):
     textRectStart.center = ((x+(w/2)), (y+(50/2)))
     gameDisplay.blit(textSurfStart, textRectStart)
     
-    
-def launch_game():
-    cap = cv2.VideoCapture(0)
+
+def cap_screen():
     seconds = 3
-
     millis = seconds * 1000
-    while (millis > 0):
-       # Capture frame-by-frame
-        ret, frame = cap.read()
+    recording = True
+    while recording and (millis > 0):
+        gameDisplay.fill(white)
+        ret, frame = camera.read()
         millis = millis - 10
-      # Display the resulting frame
-        cv2.imshow('video recording', frame)
-        if cv2.waitKey(10) & 0xFF == ord('q'):
-           #this method holds execution for 10 milliseconds, which is why we 
-           #reduce millis by 10
-            break
-
-     #once the while loop breaks, write img
+        frame2 = cv2.cvtColor(np.rot90(frame), cv2.COLOR_BGR2RGB)
+        frame2 = pygame.surfarray.make_surface(frame2)
+        gameDisplay.blit(frame2, (0,0))
+        pygame.display.update()
     img_name = "example.jpg"
     cv2.imwrite(img_name, frame)
     print("{} written!".format(img_name))
+    
 
 def game_menu():
     x = 100
