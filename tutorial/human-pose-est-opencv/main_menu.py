@@ -80,8 +80,24 @@ def cap_screen():
     img_name = "example.jpg"
     cv2.imwrite(img_name, frame)
     print("{} written!".format(img_name))
-    
+    score_screen()
 
+def score_screen():
+    gameExit = False
+ 
+    while not gameExit:
+ 
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+        gameDisplay.fill(white)
+        largeText = pygame.font.Font('freesansbold.ttf',50)
+        TextSurf, TextRect = text_objects("Score Screen", largeText)
+        TextRect.center = ((display_width/2),(50))
+        gameDisplay.blit(TextSurf, TextRect)
+        pygame.display.update()
+        clock.tick(15)
 def game_menu():
     x = 100
     y = 0
