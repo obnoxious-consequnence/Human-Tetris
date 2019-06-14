@@ -52,7 +52,7 @@ def button(msg,x,y,w,h,ic,ac,action=None):
             if action == "play":
                 start_game()
             elif action == "score":
-                # print("Scoreboard clicked!")
+                print("Scoreboard clicked!")
             elif action == "quit":
                 pygame.quit()
                 quit()
@@ -162,7 +162,20 @@ def game_menu():
         pygame.display.update()
         clock.tick(15)
 
-def game_over():
+def game_over_img(img_name, x, y):
+        img = pygame.image.load(img_name)   
+        gameDisplay.blit(img, (x, y))
+    
+def resize_img(img_to_resize, x, y):
+    img = cv2.imread(img_to_resize)
+    
+    dim = (x, y)
+    resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
+    
+    img_name = 'imgs/resized'
+    cv2.imwrite(img_name, resized)
+
+def game_over(pose_nr, req_pose, len_poses):
 
     gameExit = False
     while not gameExit:
@@ -173,9 +186,24 @@ def game_over():
                 quit()
         gameDisplay.fill(white)
         largeText = pygame.font.Font('freesansbold.ttf',50)
+
         TextSurf, TextRect = text_objects("Game Over", largeText)
         TextRect.center = ((display_width/2),(display_height/2))
         gameDisplay.blit(TextSurf, TextRect) 
+
+        # x = 50
+        # y = 50
+        # indent = 150
+
+        # for i in range(0, len_poses): 
+        #     img_name = "imgs/0{}_{}.jpg".format(pose_nr + 1, req_pose)
+        #     resize_img(img_name, 100, 100)
+        
+        # game_over_img('imgs/resized_01', 50, 50)
+        # game_over_img('imgs/resized_02', 50, 200)
+        # game_over_img('imgs/resized_03', 200, 50)
+        # # game_over_img('imgs/resized_04', 200, 200)
+
         pygame.display.update()
 
 def assignment_menu(reg_pose):
@@ -262,7 +290,7 @@ def select_pose():
 
         score_screen(counter, res)
     # Ends the game
-    game_over()
+    game_over(x, req_pose, len_poses)
 
 # Starts the game
 game_menu()
