@@ -52,7 +52,7 @@ def button(msg,x,y,w,h,ic,ac,action=None):
             if action == "play":
                 start_game()
             elif action == "score":
-                # print("Scoreboard clicked!")
+                print("Scoreboard clicked!")
             elif action == "quit":
                 pygame.quit()
                 quit()
