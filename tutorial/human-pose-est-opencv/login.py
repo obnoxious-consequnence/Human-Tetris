@@ -2,7 +2,6 @@ import pygame as pg
 import csv
 import platform
 
-
 pg.init()
 
 display_width = 800
@@ -53,7 +52,7 @@ class InputBox:
         if event.type == pg.KEYDOWN:
             if self.active:
                 if event.key == pg.K_RETURN:
-                    playerName = ""
+                    
                     playerName = self.text
                     print("Playername = " + playerName + " playerscore = ")
                     print(Score)
@@ -80,6 +79,22 @@ class InputBox:
         # Blit the rect.
         pg.draw.rect(screen, self.color, self.rect, 2)
 
+        
+def game_over():
+
+    gameExit = False
+    while not gameExit:
+ 
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                quit()
+        screen.fill(white)
+        largeText = pg.font.Font('freesansbold.ttf',50)
+        TextSurf, TextRect = text_objects("Game Over", largeText)
+        TextRect.center = ((display_width/2),(display_height/2))
+        screen.blit(TextSurf, TextRect) 
+        pg.display.update()
         
 def read_the_file():
     with open("PlayerNames.csv") as f_obj:
