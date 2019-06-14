@@ -6,6 +6,7 @@ import cv2
 import test
 import scoreSys
 import os
+import login
 
 pygame.init()
 
@@ -52,7 +53,7 @@ def button(msg,x,y,w,h,ic,ac,action=None):
             if action == "play":
                 start_game()
             elif action == "score":
-                # print("Scoreboard clicked!")
+                print("Scoreboard clicked!")
             elif action == "quit":
                 pygame.quit()
                 quit()
@@ -261,8 +262,9 @@ def select_pose():
         res = test.openpose(pose_img, req_pose, counter)
 
         score_screen(counter, res)
+    login.main()
     # Ends the game
-    game_over()
+    #game_over()
 
 # Starts the game
 game_menu()

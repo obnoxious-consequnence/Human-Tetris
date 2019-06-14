@@ -3,7 +3,6 @@ import csv
 import platform
 
 
-
 pg.init()
 
 display_width = 800
@@ -60,6 +59,8 @@ class InputBox:
                     print(Score)
                     write_to_file(playerName, Score)
                     self.text = ''
+                    read_the_file()
+                    game_over()
                     
                 elif event.key == pg.K_BACKSPACE:
                     self.text = self.text[:-1]
@@ -134,11 +135,24 @@ def main():
         
         pg.display.flip()
         clock.tick(30)
-    
-   
-    
         
-if __name__ == '__main__':
+def game_over():
+
+    gameExit = False
+    while not gameExit:
+ 
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                quit()
+        screen.fill(white)
+        largeText = pg.font.Font('freesansbold.ttf',50)
+        TextSurf, TextRect = text_objects("Game Over", largeText)
+        TextRect.center = ((display_width/2),(display_height/2))
+        screen.blit(TextSurf, TextRect) 
+        pg.display.update()
+            
+"""if __name__ == '__main__':
     main()
     read_the_file()
-    pg.quit()
+    pg.quit()"""
