@@ -26,7 +26,7 @@ while time.time() < t_end:
     cv2.putText(frame, 'Score: ', (20, 50), font, 0.6, fontColor, 1, cv2.LINE_AA)
     
     cv2.imshow('video recording', frame)
-    if cv2.waitKey(10) & 0xFF == ord('q'):
+    if cv2.waitKey(1) & 0xFF == ord('q'):
         # This method holds execution for 10 milliseconds, which is why we 
         # Reduce millis by 10
         break
