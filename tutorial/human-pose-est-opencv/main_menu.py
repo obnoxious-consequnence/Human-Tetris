@@ -3,6 +3,7 @@ import time
 import random
 import numpy as np
 import cv2
+import test
 
 pygame.init()
 
@@ -25,7 +26,9 @@ clock = pygame.time.Clock()
 stickfigImg = pygame.image.load('backgroundmain.png')
 posesImg = pygame.image.load('poses.png')
 camera = cv2.VideoCapture(0)
-recording = False
+
+camera.set(cv2.CAP_PROP_FRAME_WIDTH, display_width)
+camera.set(cv2.CAP_PROP_FRAME_HEIGHT, display_height)
 
 def stickFig(x,y):
     gameDisplay.blit(stickfigImg, (x,y))
@@ -33,16 +36,13 @@ def stickFig(x,y):
 def poses(x,y):
     gameDisplay.blit(posesImg, (x,y))
 
-def text_objects(text, font):
-    textSurface = font.render(text, True, black)
+def text_objects(text, font, color = black):
+    textSurface = font.render(text, True, color)
     return textSurface, textSurface.get_rect()
 
 def button(msg,x,y,w,h,ic,ac,action=None):
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
-
-    
-
     
     if x+w > mouse[0] > x and y+h > mouse[1] > y:
         pygame.draw.rect(gameDisplay, ac, (x, y, w, h))
@@ -55,7 +55,8 @@ def button(msg,x,y,w,h,ic,ac,action=None):
                 pygame.quit()
                 quit()
             elif action == "go":
-                cap_screen()
+                # cap_screen()
+                select_pose()
     else:
         pygame.draw.rect(gameDisplay, ic, (x, y, w, h))
 
@@ -63,34 +64,54 @@ def button(msg,x,y,w,h,ic,ac,action=None):
     textSurfStart, textRectStart = text_objects(msg, smallText)
     textRectStart.center = ((x+(w/2)), (y+(50/2)))
     gameDisplay.blit(textSurfStart, textRectStart)
-    
 
-def cap_screen():
-    seconds = 3
-    millis = seconds * 1000
-    recording = True
-    while recording and (millis > 0):
+def cap_screen(pose_nr, req_pose, len_poses):
+
+    t_start = time.time()
+    t_end = t_start + 1
+    while time.time() < t_end:
         gameDisplay.fill(white)
+
         ret, frame = camera.read()
-        millis = millis - 10
+
         frame2 = cv2.cvtColor(np.rot90(frame), cv2.COLOR_BGR2RGB)
         frame2 = pygame.surfarray.make_surface(frame2)
+
         gameDisplay.blit(frame2, (0,0))
+
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        largeText = pygame.font.Font('freesansbold.ttf',28)
+        fontColor = (255, 0, 0)
+
+        # Displays the time remaing, before picture is taken, and evaluaed
+        t_now = time.time()
+        
+        TextSurf, TextRect = text_objects(str(int((t_end + 1) - t_now)), largeText, fontColor)
+        TextRect.center = (int(display_width/2), 20)
+        gameDisplay.blit(TextSurf, TextRect)
+
         pygame.display.update()
+
+        # Displays the req. pose and total score
+        cv2.putText(frame, 'T-Pose', (20, 20), font, 0.6, fontColor, 1, cv2.LINE_AA)
+        cv2.putText(frame, 'Score: ', (20, 50), font, 0.6, fontColor, 1, cv2.LINE_AA)
+
+    # Once the while loop breaks, write img
     img_name = "example.jpg"
     cv2.imwrite(img_name, frame)
     print("{} written!".format(img_name))
     score_screen()
+    return img_name
 
 def score_screen():
-    gameExit = False
- 
-    while not gameExit:
- 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+    t_start = time.time()
+    t_end = t_start + 1
+
+    while time.time() < t_end:
+        # for event in pygame.event.get():
+        #     if event.type == pygame.QUIT:
+        #         pygame.quit()
+        #         quit()
         gameDisplay.fill(white)
         largeText = pygame.font.Font('freesansbold.ttf',50)
         TextSurf, TextRect = text_objects("Score Screen", largeText)
@@ -98,6 +119,7 @@ def score_screen():
         gameDisplay.blit(TextSurf, TextRect)
         pygame.display.update()
         clock.tick(15)
+
 def game_menu():
     x = 100
     y = 0
@@ -123,7 +145,48 @@ def game_menu():
         
         pygame.display.update()
         clock.tick(15)
+
+def game_over():
+
+    gameExit = False
+    while not gameExit:
+ 
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+        gameDisplay.fill(white)
+        largeText = pygame.font.Font('freesansbold.ttf',50)
+        TextSurf, TextRect = text_objects("Game Over", largeText)
+        TextRect.center = ((display_width/2),(display_height/2))
+        gameDisplay.blit(TextSurf, TextRect) 
+        pygame.display.update()
+
+def assignment_menu(reg_pose):
+    
+    t_start = time.time()
+    t_end = t_start + 1
+
+    while time.time() < t_end:
+        gameDisplay.fill(white)
+        largeText = pygame.font.Font('freesansbold.ttf',28)
+        fontColor = (255, 0, 0)
+
+        # Displays the time remaing, before picture is taken, and evaluaed
+        t_now = time.time()
         
+        TextSurf, TextRect = text_objects(str(int((t_end + 1) - t_now)), largeText, fontColor)
+        TextRect.center = (int(display_width/2), 20)
+        gameDisplay.blit(TextSurf, TextRect)
+
+        assignment_img = pygame.image.load('./stick_poses/' + reg_pose + '.bmp')
+        gameDisplay.blit(assignment_img,(0,50))
+
+
+
+        clock.tick(15)
+        pygame.display.update()
+
 def start_game():
 
     x = 100
@@ -155,7 +218,42 @@ def start_game():
         pygame.display.update()
         clock.tick(15)
 
+def t_pose():
+    return 'T_Pose'
+
+def y_pose():
+    return 'Y_Pose'
+
+def i_pose():
+    return 'I_Pose'
+
+def x_pose():
+    return 'X_Pose'
+
+def get_pose(pose):
+    switcher = {
+        0: t_pose(),
+        1: y_pose(),
+        2: i_pose(),
+        3: x_pose(),
+    }
+    return switcher.get(pose, "Nothing") 
+
+def select_pose():
+    poses = [0]
+    len_poses = len(poses)
+    for x in range(0, len(poses)):
+        pose = random.choice(poses)
+        poses.remove(pose)
+
+        req_pose = get_pose(pose)
+        assignment_menu(req_pose)
+        
+        pose_img = cap_screen(x, req_pose, len_poses)
+
+        test.openpose(pose_img, req_pose)
+    # Ends the game
+    game_over()
+
+# Starts the game
 game_menu()
-start_game()
-
-

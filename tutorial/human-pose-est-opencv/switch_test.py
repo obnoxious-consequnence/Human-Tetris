@@ -1,18 +1,18 @@
 import random
 import test
-import time
+
 
 def t_pose():
-    return 'T-Pose'
+    return 'T_Pose'
 
 def y_pose():
-    return 'Y-Pose'
+    return 'Y_Pose'
 
 def i_pose():
-    return 'I-Pose'
+    return 'I_Pose'
 
 def x_pose():
-    return 'X-Pose'
+    return 'X_Pose'
 
 def get_pose(pose):
     switcher = {
@@ -30,5 +30,8 @@ for x in range(0, len(poses)):
     poses.remove(pose)
 
     req_pose = get_pose(pose)
-    pose_img = test.cam_picture(x, req_pose, len_poses)
+    main_menu.assignment_menu(req_pose)
+    
+    pose_img = main_menu.cap_screen(x, req_pose, len_poses)
+
     test.openpose(pose_img, req_pose)

@@ -141,9 +141,12 @@ def openpose(image, req_pose):
                 cv.putText(frame, str(partFrom), points[idFrom], font, 0.5, fontColor, 1, cv.LINE_AA)
 
         xs, ys = coords_handler(points)
-        res = poses.tpose(ys)
+        res = poses.tpose(ys, xs)
 
         cv.putText(frame, res, (20,20), font, 0.5, fontColor, 1, cv.LINE_AA)
+
+        if not os.path.exists('imgs'):
+            os.makedirs('imgs')
 
         img_name = '{}_score.jpg'.format(req_pose)
         cv.imwrite('imgs/'+img_name, frame)
