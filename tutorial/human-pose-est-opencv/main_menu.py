@@ -68,7 +68,7 @@ def button(msg,x,y,w,h,ic,ac,action=None):
 def cap_screen(pose_nr, req_pose, len_poses):
 
     t_start = time.time()
-    t_end = t_start + 1
+    t_end = t_start + 5
     while time.time() < t_end:
         gameDisplay.fill(white)
 
@@ -97,15 +97,18 @@ def cap_screen(pose_nr, req_pose, len_poses):
         cv2.putText(frame, 'Score: ', (20, 50), font, 0.6, fontColor, 1, cv2.LINE_AA)
 
     # Once the while loop breaks, write img
-    img_name = "example.jpg"
-    cv2.imwrite(img_name, frame)
-    print("{} written!".format(img_name))
+    if not os.path.exists('imgs'):
+        os.makedirs('imgs')
+
+    img_name = "imgs/0{}_{}.jpg".format(pose_nr + 1, req_pose)
+    cv.imwrite(img_name, frame)
+
     score_screen()
     return img_name
 
 def score_screen():
     t_start = time.time()
-    t_end = t_start + 1
+    t_end = t_start + 5
 
     while time.time() < t_end:
         # for event in pygame.event.get():
@@ -165,7 +168,7 @@ def game_over():
 def assignment_menu(reg_pose):
     
     t_start = time.time()
-    t_end = t_start + 1
+    t_end = t_start + 5
 
     while time.time() < t_end:
         gameDisplay.fill(white)
@@ -180,7 +183,7 @@ def assignment_menu(reg_pose):
         gameDisplay.blit(TextSurf, TextRect)
 
         assignment_img = pygame.image.load('./stick_poses/' + reg_pose + '.bmp')
-        gameDisplay.blit(assignment_img,(0,50))
+        gameDisplay.blit(assignment_img,(100,50))
 
 
 
@@ -218,31 +221,20 @@ def start_game():
         pygame.display.update()
         clock.tick(15)
 
-def t_pose():
-    return 'T_Pose'
-
-def y_pose():
-    return 'Y_Pose'
-
-def i_pose():
-    return 'I_Pose'
-
-def x_pose():
-    return 'X_Pose'
-
 def get_pose(pose):
     switcher = {
-        0: t_pose(),
-        1: y_pose(),
-        2: i_pose(),
-        3: x_pose(),
+        0: 'T_Pose',
+        1: 'Y_Pose',
+        2: 'I_Pose',
+        3: 'X_Pose',
     }
     return switcher.get(pose, "Nothing") 
 
 def select_pose():
-    poses = [0]
+    poses = [0, 1, 2, 3]
     len_poses = len(poses)
     for x in range(0, len(poses)):
+
         pose = random.choice(poses)
         poses.remove(pose)
 
@@ -250,8 +242,8 @@ def select_pose():
         assignment_menu(req_pose)
         
         pose_img = cap_screen(x, req_pose, len_poses)
-
         test.openpose(pose_img, req_pose)
+
     # Ends the game
     game_over()
 
