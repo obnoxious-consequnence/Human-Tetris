@@ -262,7 +262,7 @@ def select_pose():
         res = test.openpose(pose_img, req_pose, counter)
 
         score_screen(counter, res)
-    login.main()
+    login.main(counter)
     # Ends the game
     #game_over()
 

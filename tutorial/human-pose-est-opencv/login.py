@@ -22,7 +22,6 @@ COLOR_ACTIVE = pg.Color('dodgerblue2')
 FONT = pg.font.Font(None, 32)
 
 playerName = ""
-Score = 0
 
 
 def text_objects(text, font):
@@ -39,7 +38,7 @@ class InputBox:
         self.txt_surface = FONT.render(text, True, self.color)
         self.active = False
 
-    def handle_event(self, event):
+    def handle_event(self, event,counter):
         if event.type == pg.MOUSEBUTTONDOWN:
             # If the user clicked on the input_box rect.
             if self.rect.collidepoint(event.pos):
@@ -55,8 +54,8 @@ class InputBox:
                     
                     playerName = self.text
                     print("Playername = " + playerName + " playerscore = ")
-                    print(Score)
-                    write_to_file(playerName, Score)
+                    print(counter())
+                    write_to_file(playerName, counter)
                     self.text = ''
                     read_the_file()
                     game_over()
@@ -104,7 +103,7 @@ def read_the_file():
         print(line.strip().split(','))
 
         
-def write_to_file(playerName, Score):
+def write_to_file(playerName, counter):
     
     if platform.system() == 'Windows':
         newline=''
@@ -114,9 +113,9 @@ def write_to_file(playerName, Score):
     with open('PlayerNames.csv', 'a', newline=newline) as output_file:
         output_writer = csv.writer(output_file)
     
-        output_writer.writerow([playerName, Score])
+        output_writer.writerow([playerName, counter()])
 
-def main():
+def main(counter):
     
     clock = pg.time.Clock()
     input_box1 = InputBox(display_width/2-70, display_height/2, 140, 32)
@@ -133,7 +132,7 @@ def main():
             if event.type == pg.QUIT:
                 done = True
             for box in input_boxes:
-                box.handle_event(event)
+                box.handle_event(event,counter)
 
         for box in input_boxes:
             box.update()
