@@ -73,8 +73,9 @@ def coords_handler(points):
     # Removing NoneTypes
     for coords in points:
         if coords != None:
-             res.append(coords)
-
+            res.append(coords)
+        else: 
+            res.append((0,0))
     # Seperating xsand ys from points
     for coords in res:
         xs.append(coords[0])
@@ -82,7 +83,7 @@ def coords_handler(points):
 
     return xs, ys
 
-def openpose(image, req_pose):
+def openpose(image, req_pose, counter):
     inWidth = 368
     inHeight = 368
     thr = 0.2
@@ -141,11 +142,22 @@ def openpose(image, req_pose):
                 cv.putText(frame, str(partFrom), points[idFrom], font, 0.5, fontColor, 1, cv.LINE_AA)
 
         xs, ys = coords_handler(points)
-        res = poses.tpose(ys, xs)
 
-        cv.putText(frame, res, (20,20), font, 0.5, fontColor, 1, cv.LINE_AA)
+        if (req_pose == 'T_Pose'):
+            res = poses.tpose(ys, xs, counter)
+        if (req_pose == 'Y_Pose'):
+            res = poses.ypose(ys, xs, counter)
+        if (req_pose == 'I_Pose'):
+            res = poses.ipose(ys, xs, counter)
+        # if (req_pose == 'X_Pose'):
+        #     res = poses.xpose(ys, xs, counter)
+
+
+        cv.putText(frame, req_pose, (20,20), font, 0.5, fontColor, 1, cv.LINE_AA)
+        cv.putText(frame, res, (20,50), font, 0.5, fontColor, 1, cv.LINE_AA)
+        cv.putText(frame, str(counter()), (20,80), font, 0.5, fontColor, 1, cv.LINE_AA)
 
         img_name = '{}_score.jpg'.format(req_pose)
         cv.imwrite('imgs/'+img_name, frame)
 
-        break
+        return res

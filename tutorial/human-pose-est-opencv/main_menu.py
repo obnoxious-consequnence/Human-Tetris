@@ -4,6 +4,8 @@ import random
 import numpy as np
 import cv2
 import test
+import scoreSys
+import os
 
 pygame.init()
 
@@ -50,7 +52,7 @@ def button(msg,x,y,w,h,ic,ac,action=None):
             if action == "play":
                 start_game()
             elif action == "score":
-                print("Scoreboard clicked!")
+                # print("Scoreboard clicked!")
             elif action == "quit":
                 pygame.quit()
                 quit()
@@ -93,20 +95,19 @@ def cap_screen(pose_nr, req_pose, len_poses):
         pygame.display.update()
 
         # Displays the req. pose and total score
-        cv2.putText(frame, 'T-Pose', (20, 20), font, 0.6, fontColor, 1, cv2.LINE_AA)
-        cv2.putText(frame, 'Score: ', (20, 50), font, 0.6, fontColor, 1, cv2.LINE_AA)
+        # cv2.putText(frame, str(req_pose), (20, 20), font, 0.6, fontColor, 1, cv2.LINE_AA)
+        # cv2.putText(frame, 'Score: ', (20, 50), font, 0.6, fontColor, 1, cv2.LINE_AA)
 
     # Once the while loop breaks, write img
     if not os.path.exists('imgs'):
         os.makedirs('imgs')
 
     img_name = "imgs/0{}_{}.jpg".format(pose_nr + 1, req_pose)
-    cv.imwrite(img_name, frame)
+    cv2.imwrite(img_name, frame)
 
-    score_screen()
     return img_name
 
-def score_screen():
+def score_screen(counter, res):
     t_start = time.time()
     t_end = t_start + 5
 
@@ -116,10 +117,22 @@ def score_screen():
         #         pygame.quit()
         #         quit()
         gameDisplay.fill(white)
+
         largeText = pygame.font.Font('freesansbold.ttf',50)
+        smallText = pygame.font.Font('freesansbold.ttf',28)
+
         TextSurf, TextRect = text_objects("Score Screen", largeText)
         TextRect.center = ((display_width/2),(50))
         gameDisplay.blit(TextSurf, TextRect)
+
+        TextSurf1, TextRect1 = text_objects(str('Response: ' + res ), smallText)
+        TextRect1.center = ((display_width/2),(90))
+        gameDisplay.blit(TextSurf1, TextRect1)
+
+        TextSurf2, TextRect2 = text_objects(('Score: ' + str(counter())), smallText)
+        TextRect2.center = ((display_width/2),(110))
+        gameDisplay.blit(TextSurf2, TextRect2)
+        
         pygame.display.update()
         clock.tick(15)
 
@@ -130,7 +143,7 @@ def game_menu():
 
     while intro:
         for event in pygame.event.get():
-            print(event)
+            # print(event)
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
@@ -231,19 +244,23 @@ def get_pose(pose):
     return switcher.get(pose, "Nothing") 
 
 def select_pose():
-    poses = [0, 1, 2, 3]
+    poses = [0, 1, 2]
     len_poses = len(poses)
     for x in range(0, len(poses)):
 
+        counter = scoreSys.counter
+
         pose = random.choice(poses)
         poses.remove(pose)
-
         req_pose = get_pose(pose)
+
         assignment_menu(req_pose)
         
         pose_img = cap_screen(x, req_pose, len_poses)
-        test.openpose(pose_img, req_pose)
 
+        res = test.openpose(pose_img, req_pose, counter)
+
+        score_screen(counter, res)
     # Ends the game
     game_over()
 
