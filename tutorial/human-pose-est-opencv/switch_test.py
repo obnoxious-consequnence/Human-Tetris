@@ -31,4 +31,4 @@ for x in range(0, len(poses)):
 
     req_pose = get_pose(pose)
     pose_img = test.cam_picture(x, req_pose, len_poses)
-    test.openpose(pose_img, req_pose)¨
+    test.openpose(pose_img, req_pose)
