@@ -6,6 +6,7 @@ import cv2
 import test
 import scoreSys
 import os
+import login
 
 pygame.init()
 
@@ -289,8 +290,11 @@ def select_pose():
         res = test.openpose(pose_img, req_pose, counter)
 
         score_screen(counter, res)
+        
+    login.main()
     # Ends the game
     game_over(x, req_pose, len_poses)
+    #game_over()
 
 # Starts the game
 game_menu()
