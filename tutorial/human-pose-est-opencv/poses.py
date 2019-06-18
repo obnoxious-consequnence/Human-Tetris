@@ -24,7 +24,6 @@ def tpose(y,x,counter):
                 counter(50)
     else:
         res ="Try again sonnyboy"
-        print(counter(1))
     return res
 
 def ypose(y,x,counter):
@@ -42,7 +41,7 @@ def ipose(y,x,counter):
         res = 'To Few Points Detectet'
     elif x[3] > x[0] -65 and x[6]<x[0]+65 and x[0] <x[8]+30:
         res="Straight as an arrow"
-        print(counter(100))
+        counter(100)
     else:
         res="Fail"
     return res

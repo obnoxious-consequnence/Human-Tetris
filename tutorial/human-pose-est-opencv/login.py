@@ -1,6 +1,7 @@
 import pygame as pg
 import csv
 import platform
+import pandas as pd
 
 pg.init()
 
@@ -20,9 +21,6 @@ screen = pg.display.set_mode((display_width, display_height))
 COLOR_INACTIVE = pg.Color('lightskyblue3')
 COLOR_ACTIVE = pg.Color('dodgerblue2')
 FONT = pg.font.Font(None, 32)
-
-playerName = ""
-
 
 def text_objects(text, font):
     textSurface = font.render(text, True, black)
@@ -53,12 +51,15 @@ class InputBox:
                 if event.key == pg.K_RETURN:
                     
                     playerName = self.text
-                    print("Playername = " + playerName + " playerscore = ")
-                    print(counter())
-                    write_to_file(playerName, counter)
+                    print("Playername = " + playerName + " playerscore = " ,counter())                    
+                    df = pd.read_csv("scoreboard.csv")
+                    df.loc[-1] = [playerName, counter()]  # adding a row
+                    df.index = df.index + 1  # shifting index
+                    df.sort_index(inplace=True) 
+                    df.to_csv("scoreboard.csv", index=False)
+                    print(df.head())
                     self.text = ''
-                    read_the_file()
-                    game_over()
+                    game_over(df)
                     
                 elif event.key == pg.K_BACKSPACE:
                     self.text = self.text[:-1]
@@ -79,7 +80,7 @@ class InputBox:
         pg.draw.rect(screen, self.color, self.rect, 2)
 
         
-def game_over():
+def game_over(df):
 
     gameExit = False
     while not gameExit:
@@ -90,31 +91,20 @@ def game_over():
                 quit()
         screen.fill(white)
         largeText = pg.font.Font('freesansbold.ttf',50)
-        TextSurf, TextRect = text_objects("Game Over", largeText)
-        TextRect.center = ((display_width/2),(display_height/2))
-        screen.blit(TextSurf, TextRect) 
+        TextSurf, TextRect = text_objects("Game Over", largeText)        
+        TextRect.center = ((display_width/2),(50))
+        screen.blit(TextSurf, TextRect)
+        
+        TextSurf2, TextRect2 = text_objects("Highscores:", largeText)
+        TextRect2.center = ((display_width/2),(display_height/3))
+        screen.blit(TextSurf2, TextRect2)
+        
+        TextSurf3, TextRect3 = text_objects("Highscores:", largeText)
+        TextRect3.center = ((display_width/2),(display_height/3))
+        screen.blit(TextSurf3, TextRect3)
+        
         pg.display.update()
         
-def read_the_file():
-    with open("PlayerNames.csv") as f_obj:
-        content = f_obj.readlines() 
-
-    for line in content[:-1]:
-        print(line.strip().split(','))
-
-        
-def write_to_file(playerName, counter):
-    
-    if platform.system() == 'Windows':
-        newline=''
-    else:
-        newline=None        
-    
-    with open('PlayerNames.csv', 'a', newline=newline) as output_file:
-        output_writer = csv.writer(output_file)
-    
-        output_writer.writerow([playerName, counter()])
-
 def main(counter):
     
     clock = pg.time.Clock()
