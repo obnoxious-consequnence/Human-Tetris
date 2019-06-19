@@ -3,7 +3,7 @@ import time
 import random
 import numpy as np
 import cv2
-import test
+import logic
 import scoreSys
 import os
 import login
@@ -183,21 +183,6 @@ def game_menu():
         clock.tick(15)
 
 
-def game_over_img(img_name, x, y):
-    img = pygame.image.load(img_name)
-    gameDisplay.blit(img, (x, y))
-
-
-def resize_img(img_to_resize, x, y):
-    img = cv2.imread(img_to_resize)
-
-    dim = (x, y)
-    resized = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
-
-    img_name = 'imgs/resized'
-    cv2.imwrite(img_name, resized)
-
-
 def assignment_menu(reg_pose):
 
     # Setting up time variabels
@@ -297,7 +282,7 @@ def select_pose():
         pose_img = cap_screen(x, req_pose, len_poses)
 
         # Starts openpose (evalute the pose)
-        res = test.openpose(pose_img, req_pose, counter)
+        res = logic.openpose(pose_img, req_pose, counter)
 
         # Starts score_screen
         score_screen(counter, res)

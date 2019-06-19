@@ -7,16 +7,20 @@ import os
 import time
 
 # Setting up a dict with names corresponding to the point id
-BODY_PARTS = {"Head": 0, "Neck": 1, "RShoulder": 2, "RElbow": 3, "RWrist": 4,
-              "LShoulder": 5, "LElbow": 6, "LWrist": 7, "RHip": 8, "RKnee": 9,
-              "RAnkle": 10, "LHip": 11, "LKnee": 12, "LAnkle": 13}
+BODY_PARTS = {
+    "Head": 0, "Neck": 1, "RShoulder": 2, "RElbow": 3, "RWrist": 4,
+    "LShoulder": 5, "LElbow": 6, "LWrist": 7, "RHip": 8, "RKnee": 9,
+    "RAnkle": 10, "LHip": 11, "LKnee": 12, "LAnkle": 13
+}
 
 # Setting up links, bewteen the body points.
-POSE_PAIRS = [["Neck", "RShoulder"], ["Neck", "LShoulder"], ["RShoulder", "RElbow"],
-              ["RElbow", "RWrist"], ["LShoulder", "LElbow"], ["LElbow", "LWrist"],
-              ["Neck", "RHip"], ["RHip", "RKnee"], [
-                  "RKnee", "RAnkle"], ["Neck", "LHip"],
-              ["LHip", "LKnee"], ["LKnee", "LAnkle"], ["Neck", "Head"]]
+POSE_PAIRS = [
+    ["Neck", "RShoulder"], ["Neck", "LShoulder"], ["RShoulder", "RElbow"],
+    ["RElbow", "RWrist"], ["LShoulder", "LElbow"], ["LElbow", "LWrist"],
+    ["Neck", "RHip"], ["RHip", "RKnee"],
+    ["RKnee", "RAnkle"], ["Neck", "LHip"],
+    ["LHip", "LKnee"], ["LKnee", "LAnkle"], ["Neck", "Head"]
+]
 
 font = cv.FONT_HERSHEY_SIMPLEX
 fontColor = (0, 0, 255)
