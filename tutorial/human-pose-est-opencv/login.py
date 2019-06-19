@@ -8,19 +8,13 @@ pg.init()
 display_width = 800
 display_height = 600
 
-black = (0,0,0)
-white = (255,255,255)
-red = (200,0,0)
-green = (0, 200, 0)
-blue = (0,0,200)
-bright_red = (255,0,0)
-bright_green = (0,255,0)
-bright_blue = (0,0,255)
+white = (255, 255, 255)
 
 screen = pg.display.set_mode((display_width, display_height))
 COLOR_INACTIVE = pg.Color('lightskyblue3')
 COLOR_ACTIVE = pg.Color('dodgerblue2')
 FONT = pg.font.Font(None, 32)
+
 
 def text_objects(text, font):
     textSurface = font.render(text, True, black)
@@ -36,7 +30,7 @@ class InputBox:
         self.txt_surface = FONT.render(text, True, self.color)
         self.active = False
 
-    def handle_event(self, event,counter):
+    def handle_event(self, event, counter):
         if event.type == pg.MOUSEBUTTONDOWN:
             # If the user clicked on the input_box rect.
             if self.rect.collidepoint(event.pos):
@@ -49,18 +43,19 @@ class InputBox:
         if event.type == pg.KEYDOWN:
             if self.active:
                 if event.key == pg.K_RETURN:
-                    
+
                     playerName = self.text
-                    print("Playername = " + playerName + " playerscore = " ,counter())                    
+                    print("Playername = " + playerName +
+                          " playerscore = ", counter())
                     df = pd.read_csv("scoreboard.csv")
                     df.loc[-1] = [playerName, counter()]  # adding a row
                     df.index = df.index + 1  # shifting index
-                    df.sort_index(inplace=True) 
+                    df.sort_index(inplace=True)
                     df.to_csv("scoreboard.csv", index=False)
                     print(df.head())
                     self.text = ''
-                    game_over(df)
-                    
+                    game_over()
+
                 elif event.key == pg.K_BACKSPACE:
                     self.text = self.text[:-1]
                 else:
@@ -79,38 +74,13 @@ class InputBox:
         # Blit the rect.
         pg.draw.rect(screen, self.color, self.rect, 2)
 
-        
-def game_over(df):
 
-    gameExit = False
-    while not gameExit:
- 
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                pg.quit()
-                quit()
-        screen.fill(white)
-        largeText = pg.font.Font('freesansbold.ttf',50)
-        TextSurf, TextRect = text_objects("Game Over", largeText)        
-        TextRect.center = ((display_width/2),(50))
-        screen.blit(TextSurf, TextRect)
-        
-        TextSurf2, TextRect2 = text_objects("Highscores:", largeText)
-        TextRect2.center = ((display_width/2),(display_height/3))
-        screen.blit(TextSurf2, TextRect2)
-        
-        TextSurf3, TextRect3 = text_objects("Highscores:", largeText)
-        TextRect3.center = ((display_width/2),(display_height/3))
-        screen.blit(TextSurf3, TextRect3)
-        
-        pg.display.update()
-        
 def main(counter):
-    
+
     clock = pg.time.Clock()
     input_box1 = InputBox(display_width/2-70, display_height/2, 140, 32)
     """
-    For flere textbokse: 
+    For more textboxes: 
     input_box2 = InputBox(100, 300, 140, 32)
     input_boxes = [input_box1, input_box2]
     """
@@ -122,7 +92,7 @@ def main(counter):
             if event.type == pg.QUIT:
                 done = True
             for box in input_boxes:
-                box.handle_event(event,counter)
+                box.handle_event(event, counter)
 
         for box in input_boxes:
             box.update()
@@ -130,32 +100,33 @@ def main(counter):
         screen.fill((white))
         for box in input_boxes:
             box.draw(screen)
-        
-        largeText = pg.font.Font('freesansbold.ttf',50)
+
+        largeText = pg.font.Font('freesansbold.ttf', 50)
         TextSurf, TextRect = text_objects("Write your username", largeText)
-        TextRect.center = ((display_width/2),(display_height/3))
+        TextRect.center = ((display_width/2), (display_height/3))
         screen.blit(TextSurf, TextRect)
-        
-        
+
         pg.display.flip()
         clock.tick(30)
-        
+
+
 def game_over():
 
     gameExit = False
     while not gameExit:
- 
+
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 quit()
         screen.fill(white)
-        largeText = pg.font.Font('freesansbold.ttf',50)
+        largeText = pg.font.Font('freesansbold.ttf', 50)
         TextSurf, TextRect = text_objects("Game Over", largeText)
-        TextRect.center = ((display_width/2),(display_height/2))
-        screen.blit(TextSurf, TextRect) 
+        TextRect.center = ((display_width/2), (display_height/2))
+        screen.blit(TextSurf, TextRect)
         pg.display.update()
-            
+
+
 """if __name__ == '__main__':
     main()
     read_the_file()
