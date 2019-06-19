@@ -17,8 +17,7 @@ BODY_PARTS = {
 POSE_PAIRS = [
     ["Neck", "RShoulder"], ["Neck", "LShoulder"], ["RShoulder", "RElbow"],
     ["RElbow", "RWrist"], ["LShoulder", "LElbow"], ["LElbow", "LWrist"],
-    ["Neck", "RHip"], ["RHip", "RKnee"],
-    ["RKnee", "RAnkle"], ["Neck", "LHip"],
+    ["Neck", "RHip"], ["RHip", "RKnee"], ["RKnee", "RAnkle"], ["Neck", "LHip"],
     ["LHip", "LKnee"], ["LKnee", "LAnkle"], ["Neck", "Head"]
 ]
 
@@ -50,7 +49,8 @@ def openpose(image, req_pose, counter):
     inHeight = 368
     thr = 0.2
 
-    # Selecting our model (MPII)
+    # Selecting our model (Mobilenet_thin)
+    # https://github.com/ildoonet/tf-pose-estimation/tree/master/models/graph/mobilenet_thin
     net = cv.dnn.readNetFromTensorflow("graph_opt.pb")
     cap = cv.VideoCapture(image)
 
